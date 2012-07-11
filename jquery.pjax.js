@@ -287,7 +287,7 @@ var pjax = $.pjax = function( options ) {
 
     if (options.push && !options.replace) {
       // Cache current container element before replacing it
-      cachePush(pjax.state.id, context.clone().contents())
+      cachePush(pjax.state.id, document.body)
 
       window.history.pushState(null, "", options.url)
     }
@@ -567,7 +567,7 @@ $(window).bind('popstate', function(event){
   if (state && state.container) {
     var container = $(state.container)
     if (container.length) {
-      var contents = cacheMapping[state.id]
+      var contents = $(cacheMapping[state.id]).find(state.container).contents()
 
       if (pjax.state) {
         // Since state ids always increase, we can deduce the history
@@ -595,7 +595,7 @@ $(window).bind('popstate', function(event){
         scrollTo: false
       }
 
-      if (contents) {
+      if (contents && contents.length) {
         // pjax event is deprecated
         $(document).trigger('pjax', [null, options])
         container.trigger('pjax:start', [null, options])
